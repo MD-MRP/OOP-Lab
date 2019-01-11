@@ -35,15 +35,70 @@ public:
     }
 };
 
+class Date
+{
+private:
+    int date,month,year;
+public:
+    Date(){}
+    Date(int date,int month,int year)
+    {
+        this->date = date;
+        this->month = month;
+        this-> year = year;
+    }
+    int getDate(){ return date; }
+    int getMonth(){ return month; }
+    int getYear(){ return year; }
 
-int cnt1=0;
-class Current_Date
+
+    void setDate(int date){ this->date=date; }
+    void setMonth(int month){ this->month=month; }
+    void setYear(int year){ this->year=year; }
+};
+class Birth_Date : public Date
 {
 public:
-    int cnt=0,current_month,current_date,current_year;
-    string str,s1,s2,s3,s4,s5;
-    void getData()
+    Birth_Date():Date(){}
+    Birth_Date(int date,int month, int year):Date(date, month, year){}
+    void displayBirthDay()
     {
+        cout<<getDate()<<" "<<getMonth()<<" "<<getYear()<<endl;
+    }
+};
+
+class Current_Date : public Date
+{
+public:
+    int operator-(Birth_Date birth_Date)  ///operator overloading
+    {
+
+        int month[] = { 31, 28, 31, 30, 31, 30, 31,31, 30, 31, 30, 31 };
+        if (birth_Date.getDate() > getDate())
+        {
+            setDate(getDate() + month[birth_Date.getMonth()]);
+            setMonth(getMonth()-1);
+            //c.current_date = c.current_date + month[birth_month - 1];
+            //c.current_month = c.current_month - 1;
+        }
+
+        if (birth_Date.getMonth() > getMonth())
+        {
+            setYear(getYear() - 1);
+            setMonth(getMonth() + 12);
+            //c.current_year = c.current_year - 1;
+            //c.current_month = c.current_month + 12;
+        }
+        int calculated_date = getDate() - birth_Date.getDate();
+        int calculated_month = getMonth() - birth_Date.getMonth();
+        int calculated_year = getYear() - birth_Date.getYear();
+        return calculated_year;
+    }
+
+    void setData()
+    {
+        string str;
+        int cnt=0;
         time_t my_time = time(NULL);
         str=ctime(&my_time);
         istringstream ss(str);
@@ -53,151 +108,44 @@ public:
             ss >> word;
             //cout << word << endl;
             cnt++;
-            //cout<<"cnt == "<<cnt<<endl;
-            //cout<<cnt<<endl;
             if(cnt==2) /// Month
             {
-
-                if((word.compare("Jan")) == 0)
-                {
-                    current_month=1;
-                }
-
-                if((word.compare("Feb")) == 0)
-                {
-                    current_month=2;
-                }
-                if((word.compare("Mar")) == 0)
-                {
-                    current_month=3;
-                }
-                if((word.compare("Apr")) == 0)
-                {
-                    current_month=4;
-                }
-
-                if((word.compare("May")) == 0)
-                {
-                    current_month=5;
-                }
-                if((word.compare("Jun")) == 0)
-                {
-                    current_month=6;
-                }
-                if((word.compare("Jul")) == 0)
-                {
-                    current_month=7;
-                }
-                if((word.compare("Aug")) == 0)
-                {
-                    current_month=8;
-                }
-
-                if((word.compare("Sep")) == 0)
-                {
-                    current_month=9;
-                }
-                if((word.compare("Oct")) == 0)
-                {
-                    current_month=10;
-                }
-                if((word.compare("Nov")) == 0)
-                {
-                    current_month=11;
-                }
-                if((word.compare("Dec")) == 0)
-                {
-                    current_month=12;
-                    //cout<<"month="<<current_month<<endl;
-                }
-
-
+                if((word.compare("Jan")) == 0){ setMonth(1); }
+                else if((word.compare("Feb")) == 0){ setMonth(2); }
+                else if((word.compare("Mar")) == 0){ setMonth(3); }
+                else if((word.compare("Apr")) == 0) { setMonth(4); }
+                else if((word.compare("May")) == 0) { setMonth(5); }
+                else if((word.compare("Jun")) == 0){ setMonth(6); }
+                else if((word.compare("Jul")) == 0){ setMonth(7); }
+                else if((word.compare("Aug")) == 0){setMonth(8);}
+                else if((word.compare("Sep")) == 0){ setMonth(9);}
+                else if((word.compare("Oct")) == 0){ setMonth(10);}
+                else if((word.compare("Nov")) == 0){setMonth(11); }
+                else if((word.compare("Dec")) == 0) { setMonth(12); }
             }
             if(cnt==3)  /// Date
             {
                 stringstream geek(word);
                 int x = 0;
                 geek >> x;
-                current_date=x;
-//­cout<<"Day="<<day<<en­dl;
+                setDate(x);
             }
             if(cnt==5)  ///year
             {
                 stringstream geek(word);
                 int y = 0;
                 geek >> y;
-                current_year=y;
-//­cout<<"Year="<<year<<­endl;
+                setYear(y);
             }
         }
         while (ss);
     }
-    void Display() { cout<<current_date<<" "<<current_month<<" "<<current_year<<endl;
+    void displayCurrent_Date() {
+        cout<<getDate()<<" "<<getMonth()<<" "<<getYear()<<endl;
     }
 };
 
-class AgeCalculator :public Current_Date
-{
-public:
-    int birth_date,
-         birth_month,
-         birth_year,
-         calculated_date,
-         calculated_month,
-         calculated_year;
-    void getBirthDate(Current_Date c,int birth_date,int birth_month,int birth_year)
-    {
-        //scanf("%d%d%d",&birth_date,&birth_month,&birth_year);
 
-        int month[] = { 31, 28, 31, 30, 31, 30, 31,31, 30, 31, 30, 31 };
-//­cout<<c.current_date<­<" "<<c.current_month<<­" "<<c.current_year<<e­ndl;
-        if (birth_date > c.current_date)
-        {
-            c.current_date = c.current_date + month[birth_month - 1];
-            c.current_month = c.current_month - 1;
-        }
-
-        if (birth_month > c.current_month)
-        {
-            c.current_year = c.current_year - 1;
-            c.current_month = c.current_month + 12;
-        }
-        calculated_date = c.current_date - birth_date;
-        calculated_month = c.current_month - birth_month;
-        calculated_year = c.current_year - birth_year;
-        //cout<<"calculated year == "<<calculated_year<<endl;
-    }
-
-    int getCalculatedDate() { return calculated_date;}
-    int getCalculatedMonth() { return calculated_month;}
-    int getCalculatedYear() {
-        int n = calculated_year;
-        //cout<<n<<endl;
-        return n;}
-    void displayPlayerAge()
-    {
-        cout<<"Player Current Age: ";
-        cout<<"Day="<<calculated_date<<" "<<"Month="<<calculated_month<<" "<<"Year="<<calculated_year<<endl;
-        if(cnt1<=3)
-        {
-            if(calculated_year>25 && calculated_year<=30 )
-            {
-                cout<<"The player is selected"<<endl;
-                cnt1++;
-                //cout<<cnt1<<endl;
-            }
-
-            else
-            {
-                cout<<"The player is not selected"<<endl;
-            }
-        }
-        else
-        {
-            cout<<"Four player is already selected"<<endl;
-        }
-    }
-};
 
 
 class Player:public Person
@@ -228,14 +176,12 @@ public:
     }
     void setAge()
     {
-        Current_Date currDate;
-        currDate.getData();
-        AgeCalculator ageCalculator;
-        ageCalculator.getBirthDate(currDate,birth_date,birth_month,birth_year);
-        calculated_date = ageCalculator.getCalculatedDate();
-        calculated_month = ageCalculator.getCalculatedMonth();
-        calculated_year = ageCalculator.getCalculatedYear();
-        age = calculated_year;
+        Current_Date current_Date;
+        current_Date.setData();
+
+        Birth_Date birth_Date(birth_date, birth_month,birth_year);
+
+        age = current_Date - birth_Date;
     }
 
     int getAge()
@@ -500,8 +446,6 @@ public:
 
 
 };
-
-
 
 
 int main()
