@@ -47,6 +47,7 @@ public:
         this->month = month;
         this-> year = year;
     }
+
     int getDate(){ return date; }
     int getMonth(){ return month; }
     int getYear(){ return year; }
@@ -55,49 +56,11 @@ public:
     void setDate(int date){ this->date=date; }
     void setMonth(int month){ this->month=month; }
     void setYear(int year){ this->year=year; }
-};
-class Birth_Date : public Date
-{
-public:
-    Birth_Date():Date(){}
-    Birth_Date(int date,int month, int year):Date(date, month, year){}
-    void displayBirthDay()
+
+
+    void setCurrentDate()
     {
-        cout<<getDate()<<" "<<getMonth()<<" "<<getYear()<<endl;
-    }
-};
-
-class Current_Date : public Date
-{
-public:
-    int operator-(Birth_Date birth_Date)  ///operator overloading
-    {
-
-        int month[] = { 31, 28, 31, 30, 31, 30, 31,31, 30, 31, 30, 31 };
-        if (birth_Date.getDate() > getDate())
-        {
-            setDate(getDate() + month[birth_Date.getMonth()]);
-            setMonth(getMonth()-1);
-            //c.current_date = c.current_date + month[birth_month - 1];
-            //c.current_month = c.current_month - 1;
-        }
-
-        if (birth_Date.getMonth() > getMonth())
-        {
-            setYear(getYear() - 1);
-            setMonth(getMonth() + 12);
-            //c.current_year = c.current_year - 1;
-            //c.current_month = c.current_month + 12;
-        }
-        int calculated_date = getDate() - birth_Date.getDate();
-        int calculated_month = getMonth() - birth_Date.getMonth();
-        int calculated_year = getYear() - birth_Date.getYear();
-        return calculated_year;
-    }
-
-    void setData()
-    {
-        string str;
+            string str;
         int cnt=0;
         time_t my_time = time(NULL);
         str=ctime(&my_time);
@@ -140,53 +103,63 @@ public:
         }
         while (ss);
     }
-    void displayCurrent_Date() {
-        cout<<getDate()<<" "<<getMonth()<<" "<<getYear()<<endl;
+    int operator-(Date birth_Date)  ///operator overloading
+    {
+        setCurrentDate();
+        int month[] = { 31, 28, 31, 30, 31, 30, 31,31, 30, 31, 30, 31 };
+        if (birth_Date.getDate() > getDate())
+        {
+            setDate(getDate() + month[birth_Date.getMonth()]);
+            setMonth(getMonth()-1);
+            //c.current_date = c.current_date + month[birth_month - 1];
+            //c.current_month = c.current_month - 1;
+        }
+
+        if (birth_Date.getMonth() > getMonth())
+        {
+            setYear(getYear() - 1);
+            setMonth(getMonth() + 12);
+            //c.current_year = c.current_year - 1;
+            //c.current_month = c.current_month + 12;
+        }
+        int calculated_date = getDate() - birth_Date.getDate();
+        int calculated_month = getMonth() - birth_Date.getMonth();
+        int calculated_year = getYear() - birth_Date.getYear();
+        return calculated_year;
     }
+
 };
-
-
-
 
 class Player:public Person
 {
 private:
-    int age;
-    int birth_date;
-    int birth_month;
-    int birth_year;
-    int calculated_date;
-    int calculated_month;
-    int calculated_year;
+    Date age;
 public:
     Player(){}
     Player(string name):Person(name){}
     Player(string name, string DOB):Person(name,DOB){}
     void setbirth_date(int birth_date)
     {
-        this->birth_date = birth_date;
+        age.setDate(birth_date);
     }
     void setbirth_month(int birth_month)
     {
-        this->birth_month = birth_month;
+        age.setMonth(birth_month);
     }
     void setbirth_year(int birth_year)
     {
-        this->birth_year = birth_year;
+        age.setYear(birth_year);
     }
     void setAge()
     {
-        Current_Date current_Date;
-        current_Date.setData();
-
-        Birth_Date birth_Date(birth_date, birth_month,birth_year);
-
-        age = current_Date - birth_Date;
+        Date current_Date;
+        Date birth_Date(age.getDate(), age.getMonth(),age.getYear());
+        age.setYear(current_Date - birth_Date);     ///we are interested only year of players age.
     }
 
     int getAge()
     {
-        return age;
+        return age.getYear();               ///we are interested only year of players age.
     }
 };
 
